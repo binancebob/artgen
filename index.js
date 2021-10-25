@@ -20,18 +20,27 @@ var dnaList = [];
 
 const saveImage = (_editionCount) => {
   fs.writeFileSync(
-    `./output/${_editionCount}.png`,
+    `./outputImg2/${_editionCount}.png`,
     canvas.toBuffer("image/png")
   );
 };
 
 const signImage = (_sig) => {
-  ctx.fillStyle = "#ffffff";
-  ctx.font = "bold 30pt Verdana";
+  ctx.fillStyle = "#000000";
+  ctx.font = "bold 15pt Copperplate";
   ctx.textBaseline = "top";
   ctx.textAlign = "left";
-  ctx.fillText(_sig, 40, 40);
+  ctx.fillText(_sig, 15, 15);
 };
+
+const signDnaImage = (_sig) => {
+  ctx.fillStyle = "#49804b";
+  ctx.font = "bold 20pt Copperplate";
+  ctx.textBaseline = "top";
+  ctx.textAlign = "left";
+  ctx.fillText(_sig, 250, 460);
+};
+
 
 const genColor = () => {
   let hue = Math.floor(Math.random() * 360);
@@ -47,12 +56,12 @@ const drawBackground = () => {
 const addMetadata = (_dna, _edition) => {
   let dateTime = Date.now();
   let tempMetadata = {
-    dna: _dna.join(""),
-    name: `#${_edition}`,
-    description: description,
+    description: `${description}${_edition}`,
+    external_url: "https://wemint.cash",
     image: `${baseImageUri}/${_edition}.png`,
+    name: `Washington #${_edition}`,
+    dna: _dna.join(""),
     edition: _edition,
-    date: dateTime,
     attributes: attributesList,
   };
   metadataList.push(tempMetadata);
@@ -130,12 +139,13 @@ const createDna = (_races, _race) => {
 };
 
 const writeMetaData = (_data) => {
-  fs.writeFileSync("./output/_metadata.json", _data);
+  fs.writeFileSync("./outputMeta2/_metadata.json", _data);
 };
+
 
 const saveMetaDataSingleFile = (_editionCount) => {
   fs.writeFileSync(
-    `./output/${_editionCount}.json`,
+    `./outputMeta2/${_editionCount}.json`,
     JSON.stringify(metadataList.find((meta) => meta.edition == _editionCount))
   );
 };
@@ -161,6 +171,7 @@ const startCreating = async () => {
           drawElement(element);
         });
         signImage(`#${editionCount}`);
+        signDnaImage(newDna.join(""));
         saveImage(editionCount);
         addMetadata(newDna, editionCount);
         saveMetaDataSingleFile(editionCount);
